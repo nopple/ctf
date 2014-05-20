@@ -101,7 +101,6 @@ if remote:
 	s.send(result)
 
 def send_cmd(s,payload,recvLen=0):
-	calc_chksum = chksum(payload)
 	payload += pack('H', chksum(payload))
 	s.send(payload)
 	return recv_all(s, recvLen)
