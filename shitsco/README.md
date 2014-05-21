@@ -4,6 +4,8 @@ This was an unintended use-after-free vulnerability in the variable processing c
 
 * Trigger the invalid state by adding and removing variables
 * Cause a 16-byte allocation with controlled data to fill the freed structure
+ * make a fake variable structure with a pointer to the password as the key and value
+ * controlled heap data via strdup() on the argument to a command
 * show variables to dump the enable password
 * profit
 
